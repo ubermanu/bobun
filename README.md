@@ -29,7 +29,7 @@ For example, if you have a `package.json` file like this:
 {
   "name": "hello-world",
   "version": "1.0.0",
-  "module": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
     "hello": "dist/bin.js"
@@ -46,7 +46,7 @@ bunx bobun
 Which will generate these files:
 
 ```
-src/index.ts → dist/index.js
+src/index.ts → dist/index.mjs
 src/index.ts → dist/index.d.ts
 src/bin.ts → dist/bin.js
 ```
