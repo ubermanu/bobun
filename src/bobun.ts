@@ -116,8 +116,7 @@ const get_build_config_from_entry = (
 ): BuildConfig => {
   const source = filename
     .replace(/^src/, 'dist')
-    // TODO: Add support for .mjs files
-    .replace(/\.js$/, '.ts')
+    .replace(/\.(m)js$/, '.ts')
     .replace(/\.d\.ts$/, '.ts')
     .replace(/^(.\/)?dist\//, '$1src/')
 
@@ -132,11 +131,14 @@ const get_build_config_from_entry = (
     throw new Error('CommonJS is not supported yet.')
   }
 
+  const naming = `[dir]/[name].${filename.endsWith('.mjs') ? 'mjs' : '[ext]'}`
+
   return {
     entrypoints: [source],
     outdir: './dist',
     target: 'bun',
     format: 'esm',
+    naming,
     external,
     plugins,
     minify,

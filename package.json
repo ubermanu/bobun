@@ -16,7 +16,7 @@
   "author": "Emmanuel Vodor <manu@paca.happy-dev.fr>",
   "type": "module",
   "bin": {
-    "bobun": "dist/cli.js"
+    "bobun": "dist/cli.mjs"
   },
   "files": [
     "dist"
