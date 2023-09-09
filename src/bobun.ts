@@ -64,8 +64,19 @@ export const bobun = async (opts: BobunOptions) => {
     config_queue.map(async (config) => await Bun.build(config))
   )
 
-  results.forEach((result, i) => {
+  const bin_files = Object.values(pkg.bin ?? {}) as string[]
+
+  for (const result of results) {
+    const i = results.indexOf(result);
+
     if (result.success) {
+      // Add shebang to bin files
+      if (bin_files.includes(files[i])) {
+        const shebang = '#!/usr/bin/env bun\n'
+        const content = await Bun.file(files[i]).text()
+        await Bun.write(files[i], shebang + content)
+      }
+
       logger.success(
         path.normalize(config_queue[i].entrypoints[0]),
         k.dim('→'),
@@ -75,7 +86,7 @@ export const bobun = async (opts: BobunOptions) => {
       logger.error(path.normalize(config_queue[i].entrypoints[0]))
       logger.log(result.outputs[0])
     }
-  })
+  }
 }
 
 const gather_entry_points = (pkg: Partial<PackageJson>): string[] => {
