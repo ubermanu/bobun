@@ -67,7 +67,7 @@ export const bobun = async (opts: BobunOptions) => {
   const bin_files = Object.values(pkg.bin ?? {}) as string[]
 
   for (const result of results) {
-    const i = results.indexOf(result);
+    const i = results.indexOf(result)
 
     if (result.success) {
       // Add shebang to bin files
@@ -84,7 +84,7 @@ export const bobun = async (opts: BobunOptions) => {
       )
     } else {
       logger.error(path.normalize(config_queue[i].entrypoints[0]))
-      logger.log(result.outputs[0])
+      logger.log('\t', result.logs.map((l) => l.message).join('\n'))
     }
   }
 }
