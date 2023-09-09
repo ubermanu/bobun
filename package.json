@@ -21,6 +21,10 @@
   "files": [
     "dist"
   ],
+  "scripts": {
+    "build": "bun src/cli.ts --minify",
+    "prepublishOnly": "bun run build"
+  },
   "prettier": "@ubermanu/prettier-config",
   "dependencies": {
     "bun-plugin-dts": "^0.1.0",
