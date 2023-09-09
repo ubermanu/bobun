@@ -1,6 +1,6 @@
 {
   "name": "@ubermanu/bobun",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A CLI that bundles your Bun project",
   "keywords": [
     "bun",
