@@ -1,3 +1,10 @@
+<p align="center">
+  <img src="images/bobun-512.png" alt="Bobun" width="200" />
+</p>
+<p align="center">
+  <img alt="npm" src="https://img.shields.io/npm/v/%40ubermanu%2Fbobun">
+</p>
+
 # @ubermanu/bobun
 
 An all-in-one bundler using `Bun.build`.
