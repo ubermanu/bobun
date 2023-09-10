@@ -115,7 +115,13 @@ const get_build_config_from_entry = (
 
   // Add dts plugin if the file is a declaration file
   if (filename.endsWith('.d.ts')) {
-    plugins.push(dts())
+    plugins.push(
+      dts({
+        output: {
+          noBanner: true,
+        },
+      })
+    )
   }
 
   if (filename.endsWith('.cjs')) {
