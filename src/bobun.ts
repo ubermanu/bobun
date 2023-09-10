@@ -47,10 +47,7 @@ export const bobun = async (opts: BobunOptions) => {
 
   logger.info(
     'Automatically detected entries:',
-    files
-      .map(path.normalize)
-      .map((f) => k.blue(f))
-      .join(', ')
+    files.map((f) => k.blue(f)).join(', ')
   )
 
   logger.info('Cleaning dist directory:', k.blue('dist'))
@@ -77,13 +74,9 @@ export const bobun = async (opts: BobunOptions) => {
         await Bun.write(files[i], shebang + content)
       }
 
-      logger.success(
-        path.normalize(config_queue[i].entrypoints[0]),
-        k.dim('→'),
-        path.normalize(files[i])
-      )
+      logger.success(config_queue[i].entrypoints[0], k.dim('→'), files[i])
     } else {
-      logger.error(path.normalize(config_queue[i].entrypoints[0]))
+      logger.error(config_queue[i].entrypoints[0])
       logger.log('\t', result.logs.map((l) => l.message).join('\n'))
     }
   }
@@ -104,7 +97,7 @@ const gather_entry_points = (pkg: Partial<PackageJson>): string[] => {
 
   const files = entries.filter((entry) => typeof entry === 'string') as string[]
 
-  return [...new Set(files)]
+  return array_unique(files.map(path.normalize))
 }
 
 // Return a build config from a given filename
@@ -145,3 +138,5 @@ const get_build_config_from_entry = (
     sourcemap: sourcemap ? 'inline' : 'none',
   }
 }
+
+const array_unique = <T>(arr: T[]): T[] => [...new Set(arr)]
