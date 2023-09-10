@@ -3,8 +3,8 @@ import dts from 'bun-plugin-dts'
 import fs from 'fs'
 import k from 'kleur'
 import path from 'path'
-import { createLogger } from './logger.ts'
-import type { PackageJson } from './types.ts'
+import { createLogger } from './logger'
+import type { PackageJson } from './types'
 
 export interface BobunOptions {
   /** The current working directory */

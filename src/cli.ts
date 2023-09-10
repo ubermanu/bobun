@@ -1,6 +1,6 @@
 import sade from 'sade'
 import pkg from '../package.json' assert { type: 'json' }
-import { bobun } from './bobun.ts'
+import { bobun } from './bobun'
 
 const program = sade('bobun', true)
 
