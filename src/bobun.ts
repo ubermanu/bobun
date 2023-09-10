@@ -7,8 +7,6 @@ import { createLogger } from './logger'
 import type { PackageJson } from './types'
 
 export interface BobunOptions {
-  /** The current working directory */
-  cwd: string
   /** Minify the output */
   minify?: boolean
   /** Generate sourcemaps */
@@ -16,13 +14,13 @@ export interface BobunOptions {
 }
 
 export const bobun = async (opts: BobunOptions) => {
-  const { cwd, minify, sourcemap } = { ...opts }
+  const { minify, sourcemap } = { ...opts }
+  const logger = createLogger()
+  const cwd = process.cwd()
 
   const pkg: Partial<PackageJson> = await Bun.file(
     path.join(cwd, 'package.json')
   ).json()
-
-  const logger = createLogger()
 
   const {
     dependencies,
@@ -53,7 +51,7 @@ export const bobun = async (opts: BobunOptions) => {
   logger.info('Cleaning dist directory:', k.blue('dist'))
   await fs.promises.rm(path.join(cwd, 'dist'), { recursive: true, force: true })
 
-  const config_queue: BuildConfig[] = files.map((file) =>
+  const config_queue = files.map((file) =>
     get_build_config_from_entry(file, external, minify, sourcemap)
   )
 
@@ -109,7 +107,7 @@ const get_build_config_from_entry = (
 ): BuildConfig => {
   const source = filename
     .replace(/^src/, 'dist')
-    .replace(/\.(m)js$/, '.ts')
+    .replace(/\.(m)?js$/, '.ts')
     .replace(/\.d\.ts$/, '.ts')
     .replace(/^(.\/)?dist\//, '$1src/')
 

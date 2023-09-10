@@ -12,7 +12,6 @@ program
 
 program.action(async (opts) => {
   await bobun({
-    cwd: process.cwd(),
     minify: !!opts.minify,
     sourcemap: !!opts.sourcemap,
   })
