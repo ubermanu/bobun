@@ -15,9 +15,7 @@ export function generate_license_header(pkg: Partial<PackageJson>): string {
     parts.push(`Author: ${pkg.author}`)
   }
 
-  parts.push(
-    `Date: ${new Date().toLocaleString()}`
-  )
+  parts.push(`Date: ${new Date().toLocaleString()}`)
 
   return '/*!\n * ' + parts.join('\n * ') + '\n */\n'
 }
