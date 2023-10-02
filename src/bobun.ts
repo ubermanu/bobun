@@ -3,6 +3,7 @@ import dts from 'bun-plugin-dts'
 import fs from 'fs'
 import k from 'kleur'
 import path from 'path'
+import prettyMs from 'pretty-ms'
 import { createLogger } from './logger'
 import type { PackageJson } from './types'
 
@@ -56,7 +57,11 @@ export const bobun = async (opts: BobunOptions) => {
   )
 
   const results = await Promise.all(
-    config_queue.map(async (config) => await Bun.build(config))
+    config_queue.map(async (config) => {
+      const now = performance.now()
+      const output = await Bun.build(config)
+      return { ...output, time: performance.now() - now }
+    })
   )
 
   const bin_files = Object.values(pkg.bin ?? {}) as string[]
@@ -72,7 +77,12 @@ export const bobun = async (opts: BobunOptions) => {
         await Bun.write(files[i], shebang + content)
       }
 
-      logger.success(config_queue[i].entrypoints[0], k.dim('→'), files[i])
+      logger.success(
+        config_queue[i].entrypoints[0],
+        k.dim('→'),
+        files[i],
+        k.dim(`(${prettyMs(result.time)})`)
+      )
     } else {
       logger.error(config_queue[i].entrypoints[0])
       logger.log('\t', result.logs.map((l) => l.message).join('\n'))
@@ -107,7 +117,7 @@ const get_build_config_from_entry = (
 ): BuildConfig => {
   const source = filename
     .replace(/^src/, 'dist')
-    .replace(/\.(m)?js$/, '.ts')
+    .replace(/\.[mc]?js$/, '.ts')
     .replace(/\.d\.ts$/, '.ts')
     .replace(/^(.\/)?dist\//, '$1src/')
 
