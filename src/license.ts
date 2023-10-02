@@ -16,11 +16,7 @@ export function generate_license_header(pkg: Partial<PackageJson>): string {
   }
 
   parts.push(
-    `Date: ${new Date().toLocaleString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })}`
+    `Date: ${new Date().toLocaleString()}`
   )
 
   return '/*!\n * ' + parts.join('\n * ') + '\n */\n'
