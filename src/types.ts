@@ -1,4 +1,7 @@
 export interface PackageJson {
+  version: string
+  license: string
+  author: string
   main: string
   module: string
   types: string
