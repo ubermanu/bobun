@@ -6,7 +6,6 @@ import path from 'path'
 import prettyMs from 'pretty-ms'
 import { createLogger } from './logger'
 import type { PackageJson } from './types'
-import { generate_license_header } from "./license";
 
 export interface BobunOptions {
   /** Minify the output */
@@ -66,16 +65,11 @@ export const bobun = async (opts: BobunOptions) => {
   )
 
   const bin_files = Object.values(pkg.bin ?? {}) as string[]
-  const header = generate_license_header(pkg)
 
   for (const result of results) {
     const i = results.indexOf(result)
 
     if (result.success) {
-      // Add license header to all files
-      const content = await Bun.file(files[i]).text()
-      await Bun.write(files[i], header + content)
-
       // Add shebang to bin files
       if (bin_files.includes(files[i])) {
         const shebang = '#!/usr/bin/env bun\n'
@@ -94,19 +88,32 @@ export const bobun = async (opts: BobunOptions) => {
       logger.log('\t', result.logs.map((l) => l.message).join('\n'))
     }
   }
+
+  // Check files in the dist directory, if they are not in the entrypoints
+  // list, then delete them.
+  let dist_files = await fs.promises.readdir(path.join(cwd, 'dist'))
+  dist_files = dist_files.map(path.normalize).map((f) => `dist/${f}`)
+
+  for (const file of dist_files) {
+    if (!files.includes(file)) {
+      await fs.promises.rm(file)
+    }
+  }
 }
 
 const gather_entry_points = (pkg: Partial<PackageJson>): string[] => {
+  // Here we set the types as first entries, so the generated *.js file
+  // will be either overwritten or deleted later on.
   const entries = [
+    pkg.types,
+    pkg.exports?.['.']?.types,
     pkg.main,
     pkg.module,
-    pkg.types,
     ...Object.values(pkg.bin ?? {}),
     pkg.exports?.import,
     pkg.exports?.require,
     pkg.exports?.['.']?.import,
     pkg.exports?.['.']?.require,
-    pkg.exports?.['.']?.types,
   ]
 
   const files = entries.filter((entry) => typeof entry === 'string') as string[]

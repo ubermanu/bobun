@@ -15,6 +15,8 @@
   "license": "MIT",
   "author": "Emmanuel Vodor <manu@paca.happy-dev.fr>",
   "type": "module",
+  "module": "dist/bobun.js",
+  "types": "dist/bobun.d.ts",
   "bin": {
     "bobun": "dist/cli.mjs"
   },
